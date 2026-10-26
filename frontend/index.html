@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Sentinel – Insider Fraud Early Warning</title>
+<style>
+:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#F4F6FC;--card:#fff;--ink:#1B2540;--mut:#5B6784;--line:#E6EBF5;--or:#F26B21;--or2:#FF9A5A;--ort:#FFE8D9;--bl:#2563EB;--blt:#E0EAFF;--rd:#D64545;--rdt:#FDE8E8;--gn:#14A38B;--gnt:#DDF5EF;--am:#E8A317;--amt:#FFF3D6}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;margin:0}
+body{background:radial-gradient(900px 420px at 100% -10%,#FFE8D9,transparent 60%),radial-gradient(700px 420px at -10% 110%,#E0EAFF,transparent 60%),#F4F6FC;background-attachment:fixed;color:var(--ink);font-family:Calibri,"Segoe UI",Arial,sans-serif;font-size:14px;line-height:1.4}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+.app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+aside{background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-right:1px solid var(--line);padding:20px 14px;position:sticky;top:env(safe-area-inset-top,0px);height:calc(100vh - env(safe-area-inset-top,0px));overflow:auto}
+.logo{display:flex;align-items:center;gap:10px;font:700 20px Cambria,Georgia,serif;padding:0 8px 22px}
+.logo i{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--or),var(--or2));color:#fff;display:grid;place-items:center;font-style:normal;box-shadow:0 6px 14px rgba(242,107,33,.35)}
+nav button{display:flex;width:100%;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;color:var(--mut);font-weight:600;margin-bottom:4px;text-align:left;transition:.15s}
+nav button:hover{background:var(--bg);color:var(--ink)}
+nav button.on{background:linear-gradient(135deg,var(--ort),#FFF3EA);color:var(--or)}
+nav b{margin-left:auto;background:var(--or);color:#fff;border-radius:10px;font-size:11px;padding:1px 7px}
+.side-note{margin-top:20px;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px;font-size:12px;color:var(--mut)}
+.side-note strong{display:block;color:var(--ink)}
+main{padding:22px 26px 34px;min-width:0}
+.top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px;position:relative}
+.top h1{font:700 26px Cambria,Georgia,serif;flex:1;min-width:180px}
+.top h1 small{display:block;font:500 13px Calibri,Arial,sans-serif;color:var(--mut)}
+.search{background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px 14px;min-width:230px;font:inherit;color:var(--ink);outline:0}
+.search:focus{border-color:var(--or);box-shadow:0 0 0 3px var(--ort)}
+.ib{width:40px;height:40px;border-radius:12px;background:#fff;border:1px solid var(--line);position:relative}
+.ib:hover,.mini:hover{filter:brightness(.96)}
+.ib i{position:absolute;top:-4px;right:-4px;background:var(--rd);color:#fff;font-size:10px;font-style:normal;border-radius:9px;padding:1px 5px}
+.live{display:flex;align-items:center;gap:7px;background:var(--gnt);color:var(--gn);font-weight:700;border-radius:20px;padding:8px 14px;font-size:12px}
+.live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--gn)}
+.live.off{background:var(--line);color:var(--mut)}.live.off::before{background:var(--mut)}
+.user{display:flex;align-items:center;gap:9px}.user span{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--bl),#6D9BFF);color:#fff;display:grid;place-items:center;font-weight:700}
+.user div{font-size:12px;color:var(--mut)}.user strong{display:block;color:var(--ink);font-size:13px}
+#drop{position:absolute;right:0;top:50px;width:300px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 34px rgba(27,37,64,.16);padding:8px;z-index:20}
+#drop div{padding:9px 10px;border-radius:10px;font-size:13px;cursor:pointer}#drop div:hover{background:var(--bg)}#drop small{color:var(--mut)}
+.hero{background:linear-gradient(120deg,var(--or),var(--or2) 60%,#FFC08F);color:#fff;border-radius:20px;padding:22px 26px;margin-bottom:16px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;box-shadow:0 12px 28px rgba(242,107,33,.25)}
+.hero h2{font:700 24px Cambria,Georgia,serif}.hero p{opacity:.95;max-width:480px;margin-top:2px}
+.hero .sp{flex:1}.hero .big{font-size:54px}
+.hero button{background:#fff;color:var(--or);font-weight:700;padding:10px 18px;border-radius:12px;margin-top:10px;box-shadow:0 4px 12px rgba(0,0,0,.12)}
+.grid{display:grid;gap:16px;margin-bottom:16px}.k4{grid-template-columns:repeat(4,1fr)}.g2{grid-template-columns:2fr 1fr}.g3{grid-template-columns:1.5fr 1fr}.g4{grid-template-columns:1.2fr 1fr}.emp{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 4px 14px rgba(154,166,192,.14);min-width:0;transition:.2s}
+.card:hover{box-shadow:0 10px 26px rgba(154,166,192,.25)}
+.card h2{font:700 17px Cambria,Georgia,serif}.sub{color:var(--mut);font-size:12px;margin:2px 0 12px}
+.hd{display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap}.hd>div:first-child{flex:1}
+.seg{display:flex;background:var(--bg);border-radius:10px;padding:3px}.seg button{padding:5px 11px;border-radius:8px;font-size:12px;font-weight:700;color:var(--mut)}.seg button.on{background:#fff;color:var(--or);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.kpi{cursor:pointer}.kpi:hover{transform:translateY(-3px)}
+.ic{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:19px;margin-bottom:10px}
+.n{font:700 32px Cambria,Georgia,serif}.l{color:var(--mut);font-size:12px}.d{font-size:12px;font-weight:700;margin-top:6px}.up{color:var(--rd)}.dn{color:var(--gn)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.chips button{padding:5px 12px;border-radius:20px;background:var(--bg);font-size:12px;font-weight:700;color:var(--mut);border:1px solid var(--line)}.chips button.on{background:var(--or);color:#fff;border-color:var(--or)}
+select{font:inherit;padding:6px 10px;border-radius:10px;border:1px solid var(--line);background:#fff}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px;min-width:600px}
+th{text-align:left;color:var(--mut);font-size:11px;letter-spacing:.04em;text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:11px 10px;border-bottom:1px solid var(--line)}tr[data-sel]{cursor:pointer}tr[data-sel]:hover td{background:#FAFBFE}tr.sel td{background:var(--ort)}small{color:var(--mut);font-size:12px}
+.pill{display:inline-block;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700}.hi{background:var(--rdt);color:var(--rd)}.md{background:var(--amt);color:#A8740A}.lo{background:var(--gnt);color:var(--gn)}
+.st{font-size:12px;font-weight:700}.st.New{color:var(--bl)}.st.Escalated{color:var(--rd)}.st.Reviewed{color:var(--gn)}
+.bar{height:7px;background:var(--line);border-radius:4px;width:70px;display:inline-block;vertical-align:middle;margin-right:8px;overflow:hidden}.bar i{display:block;height:100%;border-radius:4px}
+.mini{padding:5px 11px;border-radius:9px;background:var(--blt);color:var(--bl);font-size:12px;font-weight:700}
+.gauge{display:flex;align-items:center;gap:16px;margin-bottom:12px}.gauge .v{font:700 34px Cambria,Georgia,serif;line-height:1}
+.why{list-style:none;padding:0}.why li{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}.why li:last-child{border:0}.why em{font-style:normal;margin-left:auto;font-weight:700;color:var(--or)}
+.why .i{width:30px;height:30px;border-radius:9px;background:var(--ort);display:grid;place-items:center}
+.btns{display:flex;gap:10px;margin-top:14px}.btn{flex:1;padding:11px;border-radius:12px;font-weight:700;font-size:13px;transition:.15s}.btn:hover{transform:translateY(-1px)}.btn:disabled{opacity:.5;cursor:default;transform:none}
+.p{background:linear-gradient(135deg,var(--or),var(--or2));color:#fff;box-shadow:0 6px 14px rgba(242,107,33,.3)}.s{background:var(--blt);color:var(--bl)}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--mut);margin-top:8px;flex-wrap:wrap}.legend b{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px}
+.base{display:grid;grid-template-columns:90px 1fr 50px;gap:10px;align-items:center;margin-bottom:13px;font-size:12px}
+.base .t{height:9px;background:var(--line);border-radius:5px;position:relative}.base .t i{position:absolute;left:0;top:0;height:100%;border-radius:5px}.base .t u{position:absolute;top:-3px;width:3px;height:15px;background:var(--ink);border-radius:2px;left:30%}.base span:last-child{text-align:right;font-weight:700}
+.av{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:18px;background:linear-gradient(135deg,var(--bl),#6D9BFF)}
+.ec{cursor:pointer}.ec:hover{transform:translateY(-3px)}
+.row{display:flex;align-items:center;gap:12px}.row>div{flex:1}
+.set{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}.set:last-child{border:0}.set>div{flex:1}.set b{display:block}
+.sw{position:relative;width:46px;height:26px;flex:none}.sw input{opacity:0;position:absolute;inset:0;width:100%;height:100%;cursor:pointer;z-index:1}.sw span{position:absolute;inset:0;background:var(--line);border-radius:13px;transition:.2s}.sw span::after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:.2s}.sw input:checked+span{background:var(--or)}.sw input:checked+span::after{left:23px}
+input[type=range]{accent-color:var(--or);width:160px}
+.feed div{padding:10px 0;border-bottom:1px solid var(--line);display:flex;gap:10px;font-size:13px}.feed div:last-child{border:0}.feed small{white-space:nowrap}
+.ov{position:fixed;inset:0;background:rgba(27,37,64,.4);display:grid;place-items:center;padding:20px;z-index:50}
+.box{background:#fff;border-radius:20px;padding:22px;width:min(520px,100%);max-height:88vh;overflow:auto;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+.box textarea{width:100%;height:170px;border:1px solid var(--line);border-radius:12px;padding:10px;font:12px Consolas,monospace;margin:10px 0}
+.x{float:right;width:32px;height:32px;border-radius:10px;background:var(--bg)}
+#toast{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px;z-index:60}
+#toast div{background:var(--ink);color:#fff;padding:11px 16px;border-radius:12px;box-shadow:0 8px 22px rgba(0,0,0,.25);font-size:13px}
+.empty{text-align:center;color:var(--mut);padding:30px}
+svg{display:block;max-width:100%;height:auto}.nd{cursor:pointer}
+[hidden]{display:none!important}
+@media(max-width:1000px){.k4{grid-template-columns:1fr 1fr}.g2,.g3,.g4{grid-template-columns:1fr}}
+@media(max-width:760px){.app{grid-template-columns:1fr}aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}nav{display:flex;gap:6px;overflow-x:auto}nav button{white-space:nowrap;width:auto;margin:0}.side-note{display:none}.logo{padding-bottom:12px}main{padding:16px}.search{min-width:0;flex:1}.user div{display:none}}
+@media(max-width:480px){.k4{grid-template-columns:1fr}}
+</style></head>
+<body>
+<div class="app">
+<aside>
+ <div class="logo"><i>🛡️</i>AI Sentinel</div>
+ <nav id="nav">
+  <button data-view="dashboard">▦ Dashboard</button><button data-view="alerts">⚠ Live Alerts <b id="nb">0</b></button><button data-view="employees">👥 Employees</button><button data-view="timeline">📈 Risk Timeline</button><button data-view="graph">🕸 Graph Network</button><button data-view="cases">🔎 Investigations</button><button data-view="settings">⚙ Settings</button>
+ </nav>
+ <div class="side-note"><strong>Model status</strong>Isolation Forest + Autoencoder<br>Last retrained 2 days ago</div>
+</aside>
+<main>
+ <div class="top">
+  <h1><span id="title"></span><small>Monday, 26 Oct 2026 · Head Office Monitoring</small></h1>
+  <input class="search" id="q" placeholder="🔍 Search employee, alert ID or trigger">
+  <button class="live" id="live">Live monitoring</button>
+  <button class="ib" id="bellb" aria-label="Notifications">🔔<i id="bc">0</i></button>
+  <button class="ib" data-act="export" aria-label="Export report">⬇️</button>
+  <div class="user"><span>FI</span><div><strong>Fraud Investigator</strong>Compliance Team</div></div>
+  <div id="drop" hidden></div>
+ </div>
+
+ <section id="v-dashboard">
+  <div class="hero"><div class="big">🛡️</div><div><h2>Good morning, Investigator</h2><p id="hp"></p><button data-view="alerts">Review high-risk alerts →</button></div></div>
+  <div class="grid k4" id="kpis"></div>
+  <div class="grid g2"><div class="card" id="c1"></div><div class="card" id="donut"></div></div>
+  <div class="grid g3"><div class="card" id="dt"></div><div class="card" id="detail"></div></div>
+  <div class="grid g4"><div class="card" id="mg"></div><div class="card" id="bs"></div></div>
+ </section>
+ <section id="v-alerts" hidden><div class="card"><div class="hd"><div><h2>All Alerts</h2><p class="sub">Click a row to open the explainable alert</p></div><select id="sort"><option value="score">Sort: Risk score</option><option value="new">Sort: Newest</option></select></div><div class="chips" id="chips"></div><div class="tw" id="at"></div></div></section>
+ <section id="v-employees" hidden><div class="grid emp" id="eg"></div></section>
+ <section id="v-timeline" hidden><div class="grid g3"><div class="card" id="c2"></div><div class="card"><h2>Event Feed</h2><p class="sub">Latest monitored events</p><div class="feed" id="feed"></div></div></div></section>
+ <section id="v-graph" hidden><div class="grid g3"><div class="card" id="g1"></div><div class="card" id="gi"></div></div></section>
+ <section id="v-cases" hidden><div class="card"><h2>Investigations</h2><p class="sub">Escalated alerts become cases</p><div id="cl"></div></div></section>
+ <section id="v-settings" hidden><div class="card" style="max-width:720px"><h2>Settings</h2><p class="sub">Changes apply instantly across the dashboard</p>
+  <div class="set"><div><b>Email notifications</b><small>Send high-risk alerts to the fraud team</small></div><label class="sw"><input type="checkbox" id="s-email" checked><span></span></label></div>
+  <div class="set"><div><b>Auto-escalate</b><small>Escalate new alerts at or above the threshold</small></div><label class="sw"><input type="checkbox" id="s-auto"><span></span></label></div>
+  <div class="set"><div><b>Alert threshold: <span id="tv">80</span></b><small>Shown as the dashed line on risk charts</small></div><input type="range" id="s-thr" min="40" max="95" value="80"></div>
+  <div class="set"><div><b>Privacy mode</b><small>Mask employee names with IDs</small></div><label class="sw"><input type="checkbox" id="s-mask"><span></span></label></div>
+  <div class="btns" style="max-width:340px"><button class="btn p" data-act="save">Save settings</button><button class="btn s" data-act="reset">Reset demo</button></div></div></section>
+</main></div>
+<div id="modal" class="ov" hidden><div class="box" id="mb"></div></div>
+<div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s),sev=s=>s>=70?'High':s>=45?'Medium':'Low',cl={High:'hi',Medium:'md',Low:'lo'},col=s=>s>=70?'var(--rd)':s>=45?'var(--am)':'var(--gn)';
+const EMP={A:['Employee A','Branch Ops'],X:['Employee X','Loans'],M:['Employee M','Treasury'],R:['Employee R','Cash Desk'],K:['Employee K','Support'],B:['Employee B','Forex'],T:['Employee T','Cards'],S:['Employee S','Audit'],P:['Employee P','HR Ops']};
+const SEED=()=>[
+{id:'A-2041',e:'A',trig:'₹50L transfer, VIP access',score:85,st:'New',t:'2:30 AM',r:'🕑|Unusual login at 2:30 AM|20;💸|Large ₹50 Lakh transfer|30;💻|Unknown device|15;⭐|Accessed VIP accounts|20'},
+{id:'A-2038',e:'X',trig:'Repeated account edits',score:78,st:'New',t:'1:10 AM',r:'✏️|Repeated account modifications|35;👥|Accessed 14 unusual customers|25;🕑|Off-hours session|18'},
+{id:'A-2033',e:'B',trig:'Shared payee pattern',score:70,st:'New',t:'12:45 AM',r:'🔗|Shared payee with Employee X|35;💸|Split transactions below limit|25;🕑|Late session|10'},
+{id:'A-2029',e:'M',trig:'Unknown device login',score:61,st:'New',t:'11:20 PM',r:'💻|Unknown device|15;📍|New location|26;🕑|Late login|20'},
+{id:'A-2024',e:'R',trig:'After-hours access',score:54,st:'New',t:'10:05 PM',r:'🕑|After-hours access|24;🔁|Repeated balance lookups|18;📍|Unusual terminal|12'},
+{id:'A-2019',e:'T',trig:'Card limit overrides',score:45,st:'New',t:'9:40 PM',r:'💳|Card limit overrides|30;💻|New device|15'},
+{id:'A-2012',e:'K',trig:'New customer segment',score:32,st:'New',t:'8:15 PM',r:'👤|New customer segment|20;📄|Bulk statement download|12'}];
+let AL=SEED(),S,nid;
+const init=()=>{AL=SEED();nid=2050;S={view:'dashboard',sel:'A-2041',f:'All',sort:'score',q:'',range:'24h',live:true,gOnly:false,node:'A',cases:[],set:{email:true,auto:false,thr:80,mask:false}}};init();
+const nm=e=>S.set.mask?'EMP-'+(1000+e.charCodeAt(0)):EMP[e][0];
+const esc=e=>Math.max(12,...AL.filter(a=>a.e==e).map(a=>a.score));
+const toast=t=>{const d=document.createElement('div');d.textContent=t;$('#toast').append(d);setTimeout(()=>d.remove(),2800)};
+const T={dashboard:'Insider Fraud Early Warning',alerts:'Live Alerts',employees:'Employees',timeline:'Risk Timeline',graph:'Graph Network',cases:'Investigations',settings:'Settings'};
+const D={'24h':[[22,18,25,30,28,40,46,52,61,58,72,80,88],['12 AM','8 AM','4 PM','Now']],'7d':[[35,42,38,55,61,58,74],['Mon','Wed','Fri','Today']],'30d':[[30,34,40,38,45,52,50,60,66,72],['Week 1','Week 2','Week 3','Week 4']]};
+function chart(H,id){const [v,l]=D[S.range],x=i=>40+i*590/(v.length-1),y=n=>H-30-n*(H-50)/100,p=v.map((n,i)=>x(i)+','+y(n)).join(' ');
+ const lb=l.map((t,i)=>`<text x="${i==3?600:40+i*196}" y="${H-8}">${t}</text>`).join('');
+ return `<svg viewBox="0 0 640 ${H}"><defs><linearGradient id="g${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F26B21" stop-opacity=".35"/><stop offset="1" stop-color="#F26B21" stop-opacity="0"/></linearGradient></defs>
+ <g stroke="#E6EBF5">${[0,25,50,75,100].map(n=>`<line x1="40" x2="630" y1="${y(n)}" y2="${y(n)}"/>`).join('')}</g><g fill="#5B6784" font-size="11">${[0,50,100].map(n=>`<text x="10" y="${y(n)+4}">${n}</text>`).join('')}${lb}</g>
+ <polygon points="40,${y(0)} ${p} 630,${y(0)}" fill="url(#g${id})"/><polyline points="${p}" fill="none" stroke="#F26B21" stroke-width="3" stroke-linejoin="round"/>
+ <line x1="40" x2="630" y1="${y(S.set.thr)}" y2="${y(S.set.thr)}" stroke="#D64545" stroke-dasharray="5 4"/><text x="500" y="${y(S.set.thr)-6}" fill="#D64545" font-size="11">Threshold ${S.set.thr}</text>
+ ${v.map((n,i)=>`<circle cx="${x(i)}" cy="${y(n)}" r="${n>=S.set.thr?6:4}" fill="${n>=S.set.thr?'#D64545':'#F26B21'}" stroke="#fff" stroke-width="2"><title>Risk ${n}</title></circle>`).join('')}</svg>`}
+const rng=()=>`<div class="seg">${['24h','7d','30d'].map(r=>`<button data-range="${r}" class="${S.range==r?'on':''}">${r}</button>`).join('')}</div>`;
+const list=()=>{let r=AL.filter(a=>(S.f=='All'||(['High','Medium','Low'].includes(S.f)?sev(a.score)==S.f:a.st==S.f))&&(a.id+nm(a.e)+a.trig).toLowerCase().includes(S.q));return S.sort=='score'?r.sort((a,b)=>b.score-a.score):r};
+const row=(a,f)=>`<tr data-sel="${a.id}" class="${a.id==S.sel?'sel':''}"><td>#${a.id}</td><td><b>${nm(a.e)}</b><br><small>${EMP[a.e][1]}</small></td><td>${a.trig}</td><td><span class="bar"><i style="width:${a.score}%;background:${col(a.score)}"></i></span><b>${a.score}</b></td><td><span class="pill ${cl[sev(a.score)]}">${sev(a.score)}</span></td><td><span class="st ${a.st}">${a.st}</span></td>${f?`<td>${a.t}</td><td>${a.st!='Reviewed'?`<button class="mini" data-act="review" data-id="${a.id}">Review</button>`:'✓'}</td>`:''}</tr>`;
+const tbl=(l,f)=>l.length?`<table><tr><th>Alert</th><th>Employee</th><th>Trigger</th><th>Risk</th><th>Level</th><th>Status</th>${f?'<th>Time</th><th></th>':''}</tr>${l.map(a=>row(a,f)).join('')}</table>`:'<div class="empty">No alerts match your filters 🎉</div>';
+const chipsH=()=>['All','High','Medium','Low','New','Escalated','Reviewed'].map(c=>`<button data-f="${c}" class="${S.f==c?'on':''}">${c}</button>`).join('');
+function detail(id){const a=AL.find(x=>x.id==id)||AL[0];if(!a)return'';const r=a.r.split(';').map(x=>x.split('|'));
+ return `<h2>Explainable Alert #${a.id}</h2><p class="sub">${nm(a.e)} · ${EMP[a.e][1]} · ${a.t}</p><div class="gauge"><svg width="96" height="96" viewBox="0 0 100 100"><g transform="rotate(-90 50 50)" fill="none" stroke-width="12"><circle cx="50" cy="50" r="40" pathLength="100" stroke="#E6EBF5"/><circle cx="50" cy="50" r="40" pathLength="100" stroke="${col(a.score)}" stroke-linecap="round" stroke-dasharray="${a.score} 100"/></g><text x="50" y="56" text-anchor="middle" font-size="22" font-weight="700" fill="#1B2540">${a.score}</text></svg><div><span class="pill ${cl[sev(a.score)]}">${sev(a.score).toUpperCase()} RISK</span><br><small>Status: <b class="st ${a.st}">${a.st}</b></small></div></div>
+ <ul class="why">${r.map(x=>`<li><span class="i">${x[0]}</span>${x[1]}<em>+${x[2]}</em></li>`).join('')}</ul>
+ <div class="btns"><button class="btn p" data-act="esc" data-id="${a.id}" ${a.st!='New'?'disabled':''}>${a.st=='Escalated'?'Escalated ✓':'Escalate'}</button><button class="btn s" data-act="review" data-id="${a.id}" ${a.st=='Reviewed'?'disabled':''}>${a.st=='Reviewed'?'Reviewed ✓':'Mark reviewed'}</button></div>`}
+function base(e){const s=esc(e),rows=[['Login hour',Math.min(98,s+8),s>60?'Odd':'Usual'],['Txn value',s,s>60?'High':'Normal'],['Txn count',Math.max(15,s-25),'—'],['Device',s>60?100:25,s>60?'New':'Known'],['Location',Math.max(10,s-40),s>70?'New':'Usual']];
+ return rows.map(r=>`<div class="base"><span>${r[0]}</span><div class="t"><i style="width:${r[1]}%;background:${r[1]>=70?'var(--rd)':'var(--bl)'}"></i><u></u></div><span>${r[2]}</span></div>`).join('')+'<div class="legend"><span><b style="background:var(--bl)"></b>Normal</span><span><b style="background:var(--rd)"></b>Anomalous</span><span>▏ = learned baseline</span></div>'}
+const N={A:[70,130,'Emp A',1],X:[220,50,'Emp X',1],B:[220,210,'Emp B',1],Y:[370,80,'Cust Y',0],Z:[370,180,'Cust Z',0],T:[520,130,'₹50L',2]},LK=[['A','X',0],['A','B',0],['X','Y',0],['B','Z',0],['X','B',1],['Y','Z',1],['A','T',1],['Y','T',1]];
+function graph(W){return `<svg viewBox="0 0 600 260">${LK.filter(k=>!S.gOnly||k[2]).map(k=>`<line x1="${N[k[0]][0]}" y1="${N[k[0]][1]}" x2="${N[k[1]][0]}" y2="${N[k[1]][1]}" stroke="${k[2]?'#D64545':'#9AA6C0'}" stroke-width="${k[2]?3:2}" ${k[2]?'':'stroke-dasharray="5 4"'}/>`).join('')}
+ ${Object.entries(N).map(([k,n])=>`<g class="nd" data-node="${k}" opacity="${S.gOnly&&!LK.some(l=>l[2]&&l.includes(k))?.25:1}"><circle cx="${n[0]}" cy="${n[1]}" r="${S.node==k?32:26}" fill="${['#F26B21','#2563EB','#14A38B'][n[3]]}" stroke="${S.node==k?'#1B2540':'#fff'}" stroke-width="3"/><text x="${n[0]}" y="${n[1]+4}" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">${n[2]}</text></g>`).join('')}</svg>`}
+const INFO={A:'Source of the ₹50L transfer at 2:30 AM from an unknown device.',X:'Edited 14 customer accounts; shares a payee with Employee B.',B:'Split transactions below limit; linked to Employee X.',Y:'Customer receiving funds from both employees.',Z:'Customer in the shared-payee chain.',T:'₹50 Lakh transaction touching the suspicious cluster.'};
+const gtoggle=()=>`<button class="mini" data-act="gonly">${S.gOnly?'Show all links':'Suspicious links only'}</button>`;
+function render(){
+ document.querySelectorAll('section').forEach(s=>s.hidden=s.id!='v-'+S.view);
+ document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.view==S.view));
+ $('#title').textContent=T[S.view];const op=AL.filter(a=>a.st!='Reviewed'),hi=op.filter(a=>a.score>=70);
+ $('#nb').textContent=op.length;$('#bc').textContent=AL.filter(a=>a.st=='New').length;
+ $('#hp').textContent=`${hi.length} high-risk alerts need attention. ${AL.filter(a=>a.st=='Escalated').length} cases are escalated.`;
+ $('#kpis').innerHTML=[['⚠️','var(--rdt)',op.length,'Active alerts','▲ live','up','alerts'],['👤','var(--ort)',new Set(hi.map(a=>a.e)).size,'High-risk employees','View employees','up','employees'],['📊','var(--blt)','1.2M','Events monitored today','Kafka stream healthy','','timeline'],['⏱️','var(--gnt)','4.2 min','Avg. time to detect','▼ 38% faster','dn','cases']].map(k=>`<div class="card kpi" data-view="${k[6]}"><div class="ic" style="background:${k[1]}">${k[0]}</div><div class="n">${k[2]}</div><div class="l">${k[3]}</div><div class="d ${k[5]}">${k[4]}</div></div>`).join('');
+ const c={High:0,Medium:0,Low:0};op.forEach(a=>c[sev(a.score)]++);let cum=0,tot=op.length||1;
+ $('#c1').innerHTML=`<div class="hd"><div><h2>Risk Timeline</h2><p class="sub">Aggregate anomaly score, last ${S.range}</p></div>${rng()}</div>`+chart(220,1);
+ $('#donut').innerHTML=`<h2>Alert Severity</h2><p class="sub">${op.length} open alerts · click a level to filter</p><svg viewBox="0 0 200 160"><g transform="rotate(-90 100 80)" fill="none" stroke-width="22"><circle cx="100" cy="80" r="52" pathLength="100" stroke="#E6EBF5"/>${[['High','#D64545'],['Medium','#E8A317'],['Low','#14A38B']].map(([k,cc])=>{const p=c[k]/tot*100,o=`<circle cx="100" cy="80" r="52" pathLength="100" stroke="${cc}" stroke-dasharray="${p} ${100-p}" stroke-dashoffset="${-cum}"/>`;cum+=p;return o}).join('')}</g><text x="100" y="88" text-anchor="middle" font-family="Cambria,serif" font-size="28" font-weight="700" fill="#1B2540">${op.length}</text></svg><div class="legend">${[['High','rd'],['Medium','am'],['Low','gn']].map(([k,v])=>`<button data-f="${k}" data-view="alerts"><b style="background:var(--${v})"></b>${k} ${c[k]}</button>`).join('')}</div>`;
+ $('#dt').innerHTML=`<h2>Live Alerts</h2><p class="sub">Top alerts by risk · <a href="#alerts" data-view="alerts" style="color:var(--or)">see all</a></p><div class="chips">${chipsH()}</div><div class="tw">${tbl(list().slice(0,5))}</div>`;
+ $('#detail').innerHTML=detail(S.sel);
+ $('#mg').innerHTML=`<div class="hd"><div><h2>Collusion Graph</h2><p class="sub">Click a node for details</p></div>${gtoggle()}</div>`+graph()+`<small>${INFO[S.node]}</small>`;
+ const sa=AL.find(a=>a.id==S.sel)||AL[0];$('#bs').innerHTML=`<h2>Behaviour vs Baseline</h2><p class="sub">${sa?nm(sa.e):''} today vs learned profile</p>`+(sa?base(sa.e):'');
+ $('#chips').innerHTML=chipsH();$('#sort').value=S.sort;$('#at').innerHTML=tbl(list(),1);
+ const ql=Object.keys(EMP).filter(e=>(nm(e)+EMP[e][1]).toLowerCase().includes(S.q));
+ $('#eg').innerHTML=ql.length?ql.map(e=>{const s=esc(e);return `<div class="card ec" data-emp="${e}"><div class="row"><div class="av">${e}</div><div><b>${nm(e)}</b><br><small>${EMP[e][1]}</small></div></div><div style="margin:14px 0 6px"><span class="bar" style="width:70%"><i style="width:${s}%;background:${col(s)}"></i></span><b>${s}</b></div><span class="pill ${cl[sev(s)]}">${sev(s)} risk</span> <small>${AL.filter(a=>a.e==e).length} alerts</small></div>`}).join(''):'<div class="empty">No employees found</div>';
+ $('#c2').innerHTML=`<div class="hd"><div><h2>Risk Timeline</h2><p class="sub">Red points are above the alert threshold</p></div>${rng()}</div>`+chart(300,2);
+ $('#feed').innerHTML=AL.slice(0,7).map(a=>`<div><small>${a.t}</small><span><b>${nm(a.e)}</b> · ${a.trig}</span></div>`).join('');
+ $('#g1').innerHTML=`<div class="hd"><div><h2>Relationship Network</h2><p class="sub">Employees, customers and transactions</p></div>${gtoggle()}</div>`+graph();
+ $('#gi').innerHTML=`<h2>${N[S.node][2]}</h2><p class="sub">${['Employee','Employee','Customer'][N[S.node][3]]}</p><p>${INFO[S.node]}</p><div class="legend"><span><b style="background:#F26B21"></b>Source</span><span><b style="background:#2563EB"></b>Employee</span><span><b style="background:#14A38B"></b>Customer</span></div><p class="sub" style="margin-top:14px">Red links mark the suspected collusion pattern.</p>`;
+ $('#cl').innerHTML=S.cases.length?S.cases.map(k=>`<div class="set"><div><b>${k.id} · ${nm(k.e)}</b><small>Alert #${k.a} · opened ${k.t}</small></div><span class="pill ${k.open?'hi':'lo'}">${k.open?'Open':'Closed'}</span><button class="mini" data-act="case" data-id="${k.id}">${k.open?'Close case':'Reopen'}</button></div>`).join(''):'<div class="empty">No cases yet. Escalate an alert to open one.</div>';
+ $('#drop').innerHTML=AL.slice(0,4).map(a=>`<div data-sel="${a.id}"><b>${nm(a.e)}</b> · ${a.score}<br><small>${a.trig} · ${a.t}</small></div>`).join('');
+}
+const go=v=>{S.view=v;location.hash=v;$('#drop').hidden=true;render();scrollTo(0,0)};
+const modal=h=>{$('#mb').innerHTML='<button class="x" data-close>✕</button>'+h;$('#modal').hidden=false};
+function csv(){return 'id,employee,trigger,score,level,status\n'+AL.map(a=>[a.id,nm(a.e),'"'+a.trig+'"',a.score,sev(a.score),a.st].join(',')).join('\n')}
+const api=(id,st)=>fetch('/api/alerts/'+id+'/status',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({status:st})}).catch(()=>{});
+function esca(id){const a=AL.find(x=>x.id==id);a.st='Escalated';api(id,'Escalated');S.cases.unshift({id:'C-'+(100+S.cases.length+1),a:id,e:a.e,t:new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}),open:1});toast('Alert #'+id+' escalated — case opened')}
+document.addEventListener('click',ev=>{const t=ev.target,q=s=>t.closest(s);let m;
+ if(!q('#drop')&&!q('#bellb'))$('#drop').hidden=true;
+ if(q('#bellb')){$('#drop').hidden=!$('#drop').hidden;return}
+ if(m=q('[data-close]')||(t.id=='modal'&&t)){$('#modal').hidden=true;return}
+ if(m=q('[data-act]')){const a=m.dataset.act,id=m.dataset.id;
+  if(a=='esc')esca(id);
+  else if(a=='review'){AL.find(x=>x.id==id).st='Reviewed';api(id,'Reviewed');toast('Alert #'+id+' marked reviewed')}
+  else if(a=='case'){const k=S.cases.find(x=>x.id==id);k.open=k.open?0:1;toast('Case '+id+(k.open?' reopened':' closed'))}
+  else if(a=='gonly')S.gOnly=!S.gOnly;
+  else if(a=='save')toast('Settings saved');
+  else if(a=='reset'){init();$('#q').value='';['email','auto','mask'].forEach(k=>$('#s-'+k).checked=k=='email');$('#s-thr').value=80;$('#tv').textContent=80;toast('Demo data reset')}
+  else if(a=='export'){modal('<h2>Export report</h2><p class="sub">Open alerts as CSV</p><textarea id="ta" readonly>'+csv()+'</textarea><div class="btns"><button class="btn p" data-act="copy">Copy CSV</button></div>');return}
+  else if(a=='copy'){const x=$('#ta');x.select();try{navigator.clipboard.writeText(x.value).then(()=>toast('CSV copied'),()=>{document.execCommand('copy');toast('CSV copied')})}catch(e){try{document.execCommand('copy');toast('CSV copied')}catch(_){toast('Press Ctrl+C to copy')}}return}
+  if(!$('#modal').hidden&&id)$('#mb').innerHTML='<button class="x" data-close>✕</button>'+detail(id);render();return}
+ if(m=q('[data-view]')){if(m.dataset.f)S.f=m.dataset.f;go(m.dataset.view);ev.preventDefault();return}
+ if(m=q('[data-f]')){S.f=m.dataset.f;render();return}
+ if(m=q('[data-range]')){S.range=m.dataset.range;render();return}
+ if(m=q('[data-node]')){S.node=m.dataset.node;render();return}
+ if(m=q('[data-emp]')){const e=m.dataset.emp;modal(`<div class="row"><div class="av">${e}</div><div><h2>${nm(e)}</h2><small>${EMP[e][1]} · risk ${esc(e)}</small></div></div><h2 style="margin:16px 0 8px;font-size:15px">Behaviour vs baseline</h2>${base(e)}<h2 style="margin:10px 0;font-size:15px">Alerts</h2>${AL.filter(a=>a.e==e).map(a=>`<div class="set"><div><b>#${a.id}</b><small>${a.trig}</small></div><span class="pill ${cl[sev(a.score)]}">${a.score}</span></div>`).join('')||'<small>No alerts for this employee.</small>'}`);return}
+ if(m=q('[data-sel]')){S.sel=m.dataset.sel;$('#drop').hidden=true;if(S.view=='dashboard'){render();$('#detail').scrollIntoView({behavior:'smooth',block:'nearest'})}else{render();modal(detail(S.sel))}}
+});
+$('#q').addEventListener('input',e=>{S.q=e.target.value.toLowerCase();if(!['alerts','employees'].includes(S.view))S.view='alerts';render()});
+$('#sort').addEventListener('change',e=>{S.sort=e.target.value;render()});
+$('#live').addEventListener('click',e=>{S.live=!S.live;e.target.classList.toggle('off',!S.live);e.target.textContent=S.live?'Live monitoring':'Paused';toast(S.live?'Live monitoring resumed':'Live monitoring paused')});
+$('#s-email').onchange=e=>{S.set.email=e.target.checked;toast('Email notifications '+(e.target.checked?'on':'off'))};
+$('#s-auto').onchange=e=>{S.set.auto=e.target.checked;toast('Auto-escalate '+(e.target.checked?'on':'off'))};
+$('#s-mask').onchange=e=>{S.set.mask=e.target.checked;render()};
+$('#s-thr').oninput=e=>{S.set.thr=+e.target.value;$('#tv').textContent=e.target.value;render()};
+const TR=['Bulk statement download','Login from new device','After-hours access','Large cash withdrawal','Repeated account edits'];
+setInterval(()=>{if(!S.live||AL.length>=12)return;const k=Object.keys(EMP),e=k[Math.floor(Math.random()*k.length)],sc=30+Math.floor(Math.random()*60),id='A-'+(++nid);
+ AL.unshift({id,e,trig:TR[nid%5],score:sc,st:'New',t:new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}),r:'⚡|'+TR[nid%5]+'|'+(sc-10)+';🕑|Outside normal hours|10'});
+ toast('🔔 New alert #'+id+' · '+nm(e)+' · '+sc);if(S.set.auto&&sc>=S.set.thr)esca(id);render()},14000);
+const h=location.hash.slice(1);if(T[h])S.view=h;render();
+fetch('/api/bootstrap').then(r=>r.json()).then(d=>{Object.keys(EMP).forEach(k=>delete EMP[k]);Object.assign(EMP,d.emp);AL=d.alerts;S.sel=AL[0]?AL[0].id:S.sel;render();toast('Connected to AI Sentinel API · '+AL.length+' alerts from the model')}).catch(()=>{});
+</script>
+</body></html>
